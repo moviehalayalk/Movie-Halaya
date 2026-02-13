@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <title>Movie Halaya - Super Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background: #050505; color: white; font-family: 'Inter', sans-serif; }
+        .input-box { background: #111; border: 1px solid #333; padding: 10px; border-radius: 8px; width: 100%; margin-bottom: 10px; color: white; outline: none; }
+        .neon-red { color: #ff0000; text-shadow: 0 0 10px #ff0000; }
+        .sidebar { transition: 0.3s; width: 250px; height: 100vh; position: fixed; left: 0; top: 0; background: #0c0c0c; border-right: 1px solid #222; z-index: 1000; }
+        .main-content { transition: 0.3s; margin-left: 250px; padding: 30px; }
+        .nav-item { padding: 15px 25px; cursor: pointer; display: flex; align-items: center; gap: 15px; color: #888; transition: 0.3s; border-left: 4px solid transparent; }
+        .nav-item:hover, .nav-item.active { background: #1a1a1a; color: #ff0000; border-left-color: #ff0000; }
+        #loader { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 9999; flex-direction: column; align-items: center; justify-content: center; }
+    </style>
+</head>
+<body>
+    <div id="loader"><div class="w-12 h-12 border-4 border-red-600 border-t-transparent rounded-full animate-spin mb-4"></div><p>Processing... Please Wait</p></div>
+
+    <div class="sidebar">
+        <div class="p-6 text-center border-b border-zinc-800">
+            <img src="https://res.cloudinary.com/des8fkaqb/image/upload/v1770955444/12284-removebg-preview_jzodoz.png" class="w-24 mx-auto mb-2">
+            <h2 class="text-xs font-bold neon-red uppercase tracking-widest">Admin Panel</h2>
+        </div>
+        <nav class="mt-6">
+            <div onclick="showTab('add-tab')" class="nav-item active" id="btn-add"><i class="fas fa-plus"></i> Add New</div>
+            <div onclick="showTab('manage-tab')" class="nav-item" id="btn-manage"><i class="fas fa-tasks"></i> Manage Content</div>
+            <div onclick="showTab('episode-tab')" class="nav-item" id="btn-ep"><i class="fas fa-plus-square"></i> Add Episode</div>
+            <a href="index.html" class="nav-item"><i class="fas fa-eye"></i> View Site</a>
+        </nav>
+    </div>
+
+    <div class="main-content">
+        <!-- ADD / EDIT FORM -->
+        <div id="add-tab" class="tab-content">
+            <h1 id="formTitle" class="text-2xl font-bold neon-red mb-6 uppercase">Upload New Content</h1>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 bg-zinc-900 p-8 rounded-xl border border-red-900">
+                <div class="space-y-2">
+                    <input type="hidden" id="editId">
+                    <input type="text" id="mTitle" placeholder="Title" class="input-box">
+                    <select id="mType" class="input-box"><option value="movie">Movie</option><option value="series">TV Series</option></select>
+                    <textarea id="mDesc" placeholder="Storyline / Explanation" class="input-box h-32"></textarea>
+                    <input type="text" id="mQuality" placeholder="Quality (e.g. 1080p HD)" class="input-box">
+                    <input type="text" id="mSize" placeholder="Size (e.g. 1.2 GB)" class="input-box">
+                    <input type="text" id="mLink" placeholder="Download Link" class="input-box">
+                    <label class="text-[10px] text-red-500 font-bold ml-1 uppercase">Poster Photo</label>
+                    <input type="file" id="mPoster" class="input-box" accept="image/*">
+                </div>
+                <div>
+                    <h3 class="text-red-500 font-bold mb-4 uppercase text-xs">Cast & Actors</h3>
+                    <div id="actorList" class="space-y-3 max-h-96 overflow-y-auto p-2 border border-zinc-800 rounded">
+                        <div class="actor-row bg-black p-3 rounded border border-zinc-800 space-y-2">
+                            <input type="text" placeholder="Real Name" class="input-box text-xs a-name mb-0">
+                            <input type="text" placeholder="Character" class="input-box text-xs a-char mb-0">
+                            <input type="text" placeholder="Age" class="input-box text-xs a-age mb-0">
+                            <input type="file" class="input-box text-xs a-file">
+                        </div>
+                    </div>
+                    <button onclick="addActorRow()" class="text-[10px] text-zinc-500 mt-2">+ ADD ACTOR</button>
+                </div>
+                <button onclick="saveContent()" id="saveBtn" class="bg-red-600 py-3 rounded-lg font-bold col-span-full uppercase">Publish Content</button>
+            </div>
+        </div>
+
+        <!-- MANAGE CONTENT TAB (EDIT / DELETE) -->
+        <div id="manage-tab" class="tab-content hidden">
+            <h1 class="text-2xl font-bold neon-red mb-6 uppercase">Manage Movies & Series</h1>
+            <div id="contentList" class="grid grid-cols-1 gap-4"></div>
+        </div>
+
+        <!-- EPISODE TAB -->
+        <div id="episode-tab" class="tab-content hidden">
+            <h1 class="text-2xl font-bold text-green-500 mb-6 uppercase">Add Episodes</h1>
+            <div class="max-w-xl bg-zinc-900 p-8 rounded-xl border border-green-900">
+                <select id="seriesSelect" class="input-box"><option value="">-- Select Series --</option></select>
+                <input type="text" id="epNum" placeholder="Episode No (e.g. S01 E01)" class="input-box">
+                <input type="text" id="epSize" placeholder="Size" class="input-box">
+                <input type="text" id="epLink" placeholder="Link" class="input-box">
+                <button onclick="addEpisode()" class="w-full bg-green-600 py-3 rounded font-bold">SAVE EPISODE</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, push, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyB05ZF1ytp_7wL786uCy_63aY8zFinwDlQ",
+            authDomain: "movie-halaya.firebaseapp.com",
+            databaseURL: "https://movie-halaya-default-rtdb.firebaseio.com/",
+            projectId: "movie-halaya",
+            appId: "1:163588169967:web:ed9af664a14f66d9dc7b1a"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const IMGBB_API = "84c1c14dd09a70f8f2fbd6101bdff443";
+
+        window.showTab = (id) => {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
+            document.getElementById(id).classList.remove('hidden');
+        };
+
+        window.addActorRow = () => {
+            const div = document.createElement('div');
+            div.className = "actor-row bg-black p-3 rounded border border-zinc-800 mt-2 space-y-2";
+            div.innerHTML = `<input type="text" placeholder="Real Name" class="input-box text-xs a-name mb-0"><input type="text" placeholder="Character" class="input-box text-xs a-char mb-0"><input type="text" placeholder="Age" class="input-box text-xs a-age mb-0"><input type="file" class="input-box text-xs a-file">`;
+            document.getElementById('actorList').appendChild(div);
+        };
+
+        async function uploadImg(file) {
+            let b = new FormData(); b.append("image", file);
+            const r = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API}`, {method:"POST", body:b});
+            const d = await r.json(); return d.data.url;
+        }
+
+        // SAVE / UPDATE CONTENT
+        window.saveContent = async () => {
+            const id = document.getElementById('editId').value;
+            const file = document.getElementById('mPoster').files[0];
+            document.getElementById('loader').style.display='flex';
+
+            try {
+                let posterUrl = document.getElementById('mPoster').dataset.oldUrl || "";
+                if(file) posterUrl = await uploadImg(file);
+
+                let actors = [];
+                for(let row of document.querySelectorAll('.actor-row')) {
+                    const aF = row.querySelector('.a-file').files[0];
+                    let aU = row.querySelector('.a-file').dataset.oldUrl || "";
+                    if(aF) aU = await uploadImg(aF);
+                    if(aU) actors.push({name:row.querySelector('.a-name').value, char:row.querySelector('.a-char').value, age:row.querySelector('.a-age').value, photo:aU});
+                }
+
+                const data = {
+                    title: document.getElementById('mTitle').value,
+                    type: document.getElementById('mType').value,
+                    desc: document.getElementById('mDesc').value,
+                    quality: document.getElementById('mQuality').value,
+                    size: document.getElementById('mSize').value,
+                    link: document.getElementById('mLink').value,
+                    poster: posterUrl,
+                    actors: actors,
+                    timestamp: Date.now()
+                };
+
+                if(id) await set(ref(db, 'content/' + id), data);
+                else await push(ref(db, 'content/'), data);
+
+                alert("Successfully Saved!"); location.reload();
+            } catch(e) { alert(e.message); }
+            document.getElementById('loader').style.display='none';
+        };
+
+        // LOAD MANAGE LIST
+        onValue(ref(db, 'content/'), (snap) => {
+            const list = document.getElementById('contentList');
+            const sel = document.getElementById('seriesSelect');
+            list.innerHTML = ""; sel.innerHTML = '<option value="">-- Select Series --</option>';
+            snap.forEach(c => {
+                const d = c.val();
+                if(d.type === 'series') sel.innerHTML += `<option value="${c.key}">${d.title}</option>`;
+                list.innerHTML += `
+                    <div class="bg-zinc-900 p-4 rounded-lg flex justify-between items-center border border-zinc-800">
+                        <div class="flex items-center gap-4">
+                            <img src="${d.poster}" class="w-12 h-16 object-cover rounded">
+                            <div><p class="font-bold">${d.title}</p><p class="text-[10px] text-zinc-500 uppercase">${d.type}</p></div>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="editItem('${c.key}')" class="bg-blue-600 px-4 py-2 rounded text-xs">Edit</button>
+                            <button onclick="deleteItem('${c.key}')" class="bg-red-600 px-4 py-2 rounded text-xs">Delete</button>
+                        </div>
+                    </div>`;
+            });
+        });
+
+        window.editItem = (id) => {
+            onValue(ref(db, 'content/' + id), (snap) => {
+                const d = snap.val();
+                document.getElementById('editId').value = id;
+                document.getElementById('mTitle').value = d.title;
+                document.getElementById('mDesc').value = d.desc;
+                document.getElementById('mQuality').value = d.quality;
+                document.getElementById('mSize').value = d.size;
+                document.getElementById('mLink').value = d.link;
+                document.getElementById('mPoster').dataset.oldUrl = d.poster;
+                document.getElementById('formTitle').innerText = "Edit Content";
+                document.getElementById('saveBtn').innerText = "Update Content";
+                showTab('add-tab');
+            }, {onlyOnce: true});
+        };
+
+        window.deleteItem = (id) => { if(confirm("Delete this?")) remove(ref(db, 'content/' + id)); };
+        
+        window.addEpisode = () => {
+            const sid = document.getElementById('seriesSelect').value;
+            push(ref(db, `episodes/${sid}`), {
+                epNum: document.getElementById('epNum').value,
+                size: document.getElementById('epSize').value,
+                link: document.getElementById('epLink').value
+            }).then(() => alert("Episode Added!"));
+        };
+    </script>
+</body>
+</html>
