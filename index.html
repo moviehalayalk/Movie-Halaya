@@ -1,27 +1,27 @@
-<!DOCTYPE html>
+              <!DOCTYPE html>
 <html lang="si">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- ප්‍රධාන SEO Meta Tags -->
+    <!-- SEO Meta Tags -->
     <title>Movie Halaya - Download Latest Movies & TV Series</title>
     <meta name="description" content="Movie Halaya වෙතින් අලුත්ම ඉංග්‍රීසි සහ සිංහල උපසිරැසි ගැන්වූ චිත්‍රපට සහ ටීවී සිරිස් ඉහළ ගුණාත්මක භාවයෙන් යුතුව නොමිලේ බාගත කරගන්න.">
-    <meta name="keywords" content="movie halaya, download movies, latest tv series, sinhala subtitles, free download, premium cinema, චිත්‍රපට බාගත කරන්න">
+    <meta name="keywords" content="movie halaya, moviehalayalk, download movies sl, sinhala subtitles, free movies download, premium cinema, ලංකාවේ චිත්‍රපට">
     <meta name="author" content="Movie Halaya">
-    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://moviehalayalk.github.io/Movie-Halaya/">
 
-    <!-- Open Graph / Facebook / WhatsApp (Social Media SEO) -->
+    <!-- Open Graph / Facebook / WhatsApp -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://movie-halaya.web.app/"> <!-- මෙතනට ඔයාගේ සයිට් එකේ ලින්ක් එක පසුව දාන්න -->
-    <meta property="og:title" content="Movie Halaya - Premium Cinema Dashboard">
+    <meta property="og:url" content="https://moviehalayalk.github.io/Movie-Halaya/">
+    <meta property="og:title" content="Movie Halaya - Official Premium Cinema">
     <meta property="og:description" content="හොඳම තත්වයේ චිත්‍රපට සහ ටීවී සිරිස් බලන්න සහ බාගත කරගන්න ලංකාවේ අංක එකේ වෙබ් අඩවිය.">
     <meta property="og:image" content="https://res.cloudinary.com/des8fkaqb/image/upload/v1770955444/12284-removebg-preview_jzodoz.png">
 
     <!-- Twitter Card -->
     <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://moviehalayalk.github.io/Movie-Halaya/">
     <meta property="twitter:title" content="Movie Halaya - Official Site">
-    <meta property="twitter:description" content="Download the latest movies and series on Movie Halaya.">
     <meta property="twitter:image" content="https://res.cloudinary.com/des8fkaqb/image/upload/v1770955444/12284-removebg-preview_jzodoz.png">
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -30,19 +30,19 @@
     <style>
         body { background-color: #050505; color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; }
         .neon-red { color: #ff0000; text-shadow: 0 0 10px #ff0000; }
-        .neon-border { border: 1px solid #ff0000; box-shadow: 0 0 15px rgba(255, 0, 0, 0.3); }
         .sidebar { transition: 0.3s; width: 260px; height: 100vh; position: fixed; left: -260px; top: 0; background: rgba(10, 10, 10, 0.98); backdrop-filter: blur(10px); z-index: 1000; border-right: 1px solid #222; }
         .sidebar.open { left: 0; }
         .movie-card { transition: 0.4s; background: #0f0f0f; border: 1px solid #1a1a1a; border-radius: 12px; overflow: hidden; cursor: pointer; }
         .movie-card:hover { transform: translateY(-8px); border-color: #ff0000; box-shadow: 0 10px 30px rgba(255, 0, 0, 0.2); }
-        .overlay { background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%); position: absolute; bottom: 0; width: 100%; padding: 15px; }
-        .load-more-btn { border: 1px solid #ff0000; color: #ff0000; padding: 10px 40px; border-radius: 50px; font-weight: bold; transition: 0.3s; cursor: pointer; display: inline-block; }
-        .load-more-btn:hover { background: #ff0000; color: white; box-shadow: 0 0 20px #ff0000; }
+        
+        /* Rotating Ring Animation */
         #dlLoader { display: none; position: fixed; inset: 0; background: black; z-index: 10000; flex-direction: column; align-items: center; justify-content: center; }
-        .ring { width: 220px; height: 220px; border-radius: 50%; border: 4px solid #111; border-top-color: #ff0000; animation: spin 1.5s linear infinite; position: relative; }
+        .ring { width: 230px; height: 230px; border-radius: 50%; border: 4px solid #111; border-top-color: #ff0000; animation: spin 1.5s linear infinite; position: relative; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .logo-mid { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 130px; }
+        .logo-mid { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 140px; }
+        
         .details-view { display: none; }
+        .actor-img { width: 60px; height: 60px; border-radius: 50%; object-cover: cover; border: 2px solid #ff0000; }
     </style>
 </head>
 <body>
@@ -51,65 +51,83 @@
     <div id="dlLoader">
         <div class="ring"></div>
         <img src="https://res.cloudinary.com/des8fkaqb/image/upload/v1770955444/12284-removebg-preview_jzodoz.png" class="logo-mid">
-        <p class="mt-10 neon-red font-bold animate-pulse tracking-widest uppercase">Preparing Your Download...</p>
+        <p class="mt-12 neon-red font-bold animate-pulse tracking-widest uppercase text-sm">Preparing Your Download...</p>
     </div>
 
     <!-- Sidebar -->
-    <div id="sidebar" class="sidebar">
+    <div id="sidebar" class="sidebar shadow-2xl">
         <div class="p-8 flex flex-col items-center border-b border-zinc-900">
             <img src="https://res.cloudinary.com/des8fkaqb/image/upload/v1770955444/12284-removebg-preview_jzodoz.png" class="w-32 mb-4">
             <span class="text-[10px] tracking-widest neon-red uppercase font-bold">Main Menu</span>
         </div>
         <nav class="mt-6">
-            <div onclick="location.reload()" class="p-4 hover:bg-zinc-900 cursor-pointer border-l-4 border-transparent hover:border-red-600 transition uppercase text-xs font-bold">Home</div>
-            <a href="https://wa.me/94755235773" class="block p-4 hover:bg-zinc-900 border-l-4 border-transparent hover:border-red-600 transition uppercase text-xs font-bold">Help Center</a>
+            <div onclick="location.reload()" class="p-4 hover:bg-zinc-900 cursor-pointer border-l-4 border-transparent hover:border-red-600 transition uppercase text-xs font-bold"><i class="fas fa-home mr-3"></i> Home</div>
+            <a href="https://wa.me/94755235773" target="_blank" class="block p-4 hover:bg-zinc-900 border-l-4 border-transparent hover:border-red-600 transition uppercase text-xs font-bold"><i class="fas fa-headset mr-3"></i> Help Center</a>
         </nav>
     </div>
 
     <!-- Header -->
     <header class="p-6 flex items-center justify-between sticky top-0 bg-black/90 backdrop-blur z-50 border-b border-zinc-900">
-        <button onclick="document.getElementById('sidebar').classList.toggle('open')" class="text-2xl text-red-600"><i class="fas fa-bars"></i></button>
-        <img src="https://res.cloudinary.com/des8fkaqb/image/upload/v1770955444/12284-removebg-preview_jzodoz.png" class="h-14 md:h-20 absolute left-1/2 -translate-x-1/2">
-        <div class="w-8"></div>
+        <button onclick="document.getElementById('sidebar').classList.toggle('open')" class="text-3xl text-red-600 focus:outline-none"><i class="fas fa-bars"></i></button>
+        <img src="https://res.cloudinary.com/des8fkaqb/image/upload/v1770955444/12284-removebg-preview_jzodoz.png" class="h-16 md:h-24 absolute left-1/2 -translate-x-1/2 cursor-pointer" onclick="location.reload()">
+        <div class="w-10"></div>
     </header>
 
     <!-- Search Section -->
-    <div class="container mx-auto mt-6 px-4">
+    <div class="container mx-auto mt-8 px-4">
         <div class="relative max-w-xl mx-auto">
-            <input type="text" id="searchInput" oninput="search()" placeholder="Search Movies or Series..." class="w-full bg-zinc-900 border border-zinc-800 py-4 px-8 rounded-full focus:border-red-600 outline-none transition shadow-2xl">
-            <i class="fas fa-search absolute right-6 top-5 text-zinc-500"></i>
+            <input type="text" id="searchInput" oninput="search()" placeholder="Search Movies or Series..." class="w-full bg-zinc-900 border border-zinc-800 py-4 px-8 rounded-full focus:border-red-600 outline-none transition shadow-2xl text-white">
+            <i class="fas fa-search absolute right-6 top-5 text-zinc-500 text-lg"></i>
         </div>
     </div>
 
+    <!-- List View -->
     <main id="listView" class="container mx-auto px-4 md:px-8 py-10">
-        <h2 class="text-xl font-bold mb-8 border-l-4 border-red-600 pl-4 uppercase">Latest Content</h2>
-        <div id="gridArea" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6"></div>
+        <h2 class="text-xl font-bold mb-8 border-l-4 border-red-600 pl-4 uppercase tracking-tighter">Recently Added</h2>
+        <div id="gridArea" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+            <!-- Content will load here via Firebase -->
+        </div>
     </main>
 
-    <!-- Details Section -->
+    <!-- Detailed View -->
     <main id="detailsView" class="container mx-auto px-4 md:px-8 py-10 details-view">
-        <button onclick="location.reload()" class="mb-10 text-zinc-500 hover:text-white uppercase text-xs font-bold"><i class="fas fa-arrow-left mr-2"></i> Back to Home</button>
-        <div class="flex flex-col md:flex-row gap-12">
-            <div class="md:w-80">
-                <img id="detPoster" class="w-full rounded-2xl border border-zinc-800 shadow-2xl">
-                <div id="detMeta" class="mt-6 p-4 bg-zinc-900 rounded-xl border border-zinc-800 text-xs text-zinc-400 space-y-1"></div>
+        <button onclick="location.reload()" class="mb-10 text-zinc-500 hover:text-white uppercase text-xs font-bold transition"><i class="fas fa-arrow-left mr-2"></i> Back to Home</button>
+        
+        <div class="flex flex-col lg:flex-row gap-12">
+            <!-- Left Poster -->
+            <div class="lg:w-80 flex-shrink-0">
+                <img id="detPoster" class="w-full rounded-2xl border border-zinc-800 shadow-[0_0_40px_rgba(0,0,0,0.5)]">
+                <div id="detMeta" class="mt-6 p-4 bg-zinc-900/50 rounded-xl border border-zinc-800 text-[11px] text-zinc-400 space-y-1 uppercase font-bold tracking-widest"></div>
             </div>
-            <div class="flex-1">
-                <h1 id="detTitle" class="text-4xl font-bold neon-red mb-6 uppercase"></h1>
-                <p id="detDesc" class="text-zinc-400 text-lg leading-relaxed mb-10 border-l-4 border-zinc-800 pl-6 italic"></p>
-                
-                <h3 class="text-xl font-bold mb-6 border-b border-zinc-900 pb-2 uppercase tracking-tighter">Cast & Actors</h3>
-                <div id="detActors" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4"></div>
 
+            <!-- Right Info -->
+            <div class="flex-1">
+                <h1 id="detTitle" class="text-4xl md:text-5xl font-black neon-red mb-6 uppercase leading-tight"></h1>
+                <div class="mb-8">
+                    <h3 class="text-xs font-bold text-zinc-500 mb-2 uppercase tracking-widest">Storyline / Explanation</h3>
+                    <p id="detDesc" class="text-zinc-300 text-lg leading-relaxed border-l-2 border-red-600 pl-6 italic"></p>
+                </div>
+                
+                <h3 class="text-sm font-bold text-white mb-6 uppercase border-b border-zinc-800 pb-2">Top Cast & Actors</h3>
+                <div id="detActors" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mb-10">
+                    <!-- Actors load here -->
+                </div>
+
+                <!-- Episodes if Series -->
                 <div id="epSection" class="mt-12 hidden">
-                    <h3 class="text-xl font-bold mb-6 uppercase">Available Episodes</h3>
+                    <h3 class="text-sm font-bold text-blue-500 mb-6 uppercase tracking-widest">Available Episodes</h3>
                     <div id="epList" class="grid grid-cols-1 gap-2"></div>
                 </div>
 
-                <button id="mainDlBtn" onclick="startDl()" class="mt-12 w-full bg-red-600 py-5 rounded-full font-bold text-xl uppercase tracking-widest shadow-[0_0_30px_rgba(255,0,0,0.3)] hover:scale-105 transition">Download Direct</button>
+                <button id="mainDlBtn" onclick="startDl()" class="mt-8 w-full bg-red-600 py-5 rounded-full font-black text-xl uppercase tracking-widest shadow-[0_0_30px_rgba(255,0,0,0.3)] hover:scale-[1.02] transition">Download Direct</button>
             </div>
         </div>
     </main>
+
+    <!-- WhatsApp Floating -->
+    <a href="https://wa.me/94755235773" class="fixed bottom-6 right-6 bg-green-600 p-4 rounded-full shadow-2xl hover:scale-110 transition z-50">
+        <i class="fab fa-whatsapp text-3xl"></i>
+    </a>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -127,7 +145,7 @@
 
         let activeDl = "";
 
-        // Load Grid
+        // Load Content Grid
         onValue(ref(db, 'content/'), (snap) => {
             const grid = document.getElementById('gridArea');
             grid.innerHTML = "";
@@ -135,38 +153,51 @@
                 const d = c.val();
                 grid.innerHTML += `
                     <div class="movie-card" onclick="openDetails('${c.key}')">
-                        <img src="${d.poster}" class="h-64 w-full object-cover">
-                        <div class="p-4"><h3 class="text-[11px] font-bold truncate uppercase">${d.title}</h3></div>
+                        <div class="relative overflow-hidden">
+                            <img src="${d.poster}" class="h-64 w-full object-cover">
+                        </div>
+                        <div class="p-4"><h3 class="text-[10px] font-black truncate uppercase tracking-tighter">${d.title}</h3></div>
                     </div>`;
             });
         });
 
+        // Open Detail View
         window.openDetails = (id) => {
             onValue(ref(db, 'content/' + id), (snap) => {
                 const d = snap.val();
                 document.getElementById('detTitle').innerText = d.title;
                 document.getElementById('detDesc').innerText = d.desc;
                 document.getElementById('detPoster').src = d.poster;
-                document.getElementById('detMeta').innerHTML = `<p>QUALITY: ${d.quality}</p><p>SIZE: ${d.size}</p>`;
+                document.getElementById('detMeta').innerHTML = `<p class="mb-1">QUALITY: <span class="text-white">${d.quality}</span></p><p>FILE SIZE: <span class="text-white">${d.size}</span></p>`;
                 activeDl = d.link;
 
+                // Render Actors
                 const aGrid = document.getElementById('detActors'); aGrid.innerHTML = "";
                 if(d.actors) d.actors.forEach(a => {
                     aGrid.innerHTML += `
-                        <div class="text-center bg-zinc-900 p-3 rounded-xl border border-zinc-800">
-                            <img src="${a.photo}" class="w-14 h-14 rounded-full mx-auto mb-2 object-cover border border-red-600">
-                            <p class="text-[9px] font-bold truncate">${a.name}</p>
-                            <p class="text-[7px] text-red-500 uppercase">AS ${a.char}</p>
+                        <div class="flex items-center gap-3 bg-zinc-900/80 p-2 rounded-lg border border-zinc-800">
+                            <img src="${a.photo}" class="actor-img">
+                            <div>
+                                <p class="text-[10px] font-black text-white uppercase truncate w-24">${a.name}</p>
+                                <p class="text-[8px] text-red-500 uppercase font-bold">As ${a.char}</p>
+                                <p class="text-[8px] text-zinc-500 italic">${a.age} Years</p>
+                            </div>
                         </div>`;
                 });
 
+                // Check for Series Episodes
                 if(d.type === 'series') {
                     document.getElementById('epSection').classList.remove('hidden');
                     document.getElementById('mainDlBtn').classList.add('hidden');
                     onValue(ref(db, `episodes/${id}`), (esnap) => {
                         const el = document.getElementById('epList'); el.innerHTML = "";
                         esnap.forEach(e => {
-                            el.innerHTML += `<button onclick="startDl('${e.val().link}')" class="w-full bg-zinc-800 p-4 rounded-lg text-left text-xs border border-zinc-700 hover:border-red-600 flex justify-between"><span>${e.val().epNum} (${e.val().size})</span> <i class="fas fa-download"></i></button>`;
+                            const ep = e.val();
+                            el.innerHTML += `
+                                <button onclick="startDl('${ep.link}')" class="w-full bg-zinc-900 p-4 rounded-xl text-left text-[11px] font-bold border border-zinc-800 hover:border-red-600 transition flex justify-between items-center group">
+                                    <span><i class="fas fa-play-circle mr-3 text-red-600"></i> ${ep.epNum} (${ep.size})</span> 
+                                    <i class="fas fa-download opacity-0 group-hover:opacity-100 transition"></i>
+                                </button>`;
                         });
                     });
                 } else {
@@ -176,16 +207,19 @@
 
                 document.getElementById('listView').style.display = 'none';
                 document.getElementById('detailsView').style.display = 'block';
-                window.scrollTo(0,0);
+                window.scrollTo({top: 0, behavior: 'smooth'});
             }, {onlyOnce: true});
         };
 
+        // Start Download with Animation
         window.startDl = (link) => {
             const l = link || activeDl;
+            if(!l) return alert("Link not found!");
             document.getElementById('dlLoader').style.display = 'flex';
             setTimeout(() => { window.location.href = l; }, 6000);
         };
 
+        // Search Logic
         window.search = () => {
             const t = document.getElementById('searchInput').value.toLowerCase();
             document.querySelectorAll('.movie-card').forEach(c => {
@@ -194,4 +228,4 @@
         };
     </script>
 </body>
-</html>
+</html>  
